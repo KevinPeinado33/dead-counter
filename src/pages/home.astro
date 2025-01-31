@@ -1,0 +1,110 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <div class="counter">
+    <h1 id="years">-- año</h1>
+    <h2 id="months">-- meses</h2>
+    <h3 id="weeks">-- semanas</h3>
+    <h4 id="days">-- días</h4>
+    <h5 id="hours">-- horas</h5>
+    <div class="time-section">
+      <span id="minutes">-- minutos</span>
+      <span id="seconds">-- segundos</span>
+      <span id="milliseconds">-- milisegundos</span>
+    </div>
+  </div>
+
+  <script>
+    const birthdate = new Date(2000, 10, 6);
+    const targetAge = 50;
+
+    function updateCounter() {
+      const now = new Date();
+
+      let age = now.getFullYear() - birthdate.getFullYear();
+      if (
+        now.getMonth() < birthdate.getMonth() ||
+        (now.getMonth() === birthdate.getMonth() && now.getDate() < birthdate.getDate())
+      ) {
+        age--;
+      }
+
+      const targetDate = new Date(
+        birthdate.getFullYear() + targetAge,
+        birthdate.getMonth(),
+        birthdate.getDate()
+      );
+
+      let timeRemaining = targetDate.getTime() - now.getTime();
+      if (timeRemaining < 0) timeRemaining = 0;
+
+      const years = Math.floor(timeRemaining / (1000 * 60 * 60 * 24 * 365));
+      const months = Math.floor((timeRemaining % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
+      const weeks = Math.floor((timeRemaining % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24 * 7));
+      const days = Math.floor((timeRemaining % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+      const milliseconds = timeRemaining % 1000;
+
+      updateTextContent("years", `${years} año${years !== 1 ? "s" : ""}`);
+      updateTextContent("months", `${months} mes${months !== 1 ? "es" : ""}`);
+      updateTextContent("weeks", `${weeks} semana${weeks !== 1 ? "s" : ""}`);
+      updateTextContent("days", `${days} día${days !== 1 ? "s" : ""}`);
+      updateTextContent("hours", `${hours} hora${hours !== 1 ? "s" : ""}`);
+      updateTextContent("minutes", `${minutes} minuto${minutes !== 1 ? "s" : ""}`);
+      updateTextContent("seconds", `${seconds} segundo${seconds !== 1 ? "s" : ""}`);
+      updateTextContent("milliseconds", `${milliseconds} ms`);
+    }
+
+    function updateTextContent(id: any, text: any) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = text;
+      }
+    }
+
+    setInterval(updateCounter, 1); // Actualizar cada milisegundo
+    updateCounter(); // Ejecución inicial
+  </script>
+
+  <style>
+    .counter {
+      text-align: center;
+      padding: 2rem;
+      font-family: system-ui;
+    }
+
+    h1 {
+      color: #2c3e50;
+      font-size: 3rem;
+    }
+    h2 {
+      color: #34495e;
+      font-size: 2.5rem;
+    }
+    h3 {
+      color: #7f8c8d;
+      font-size: 2rem;
+    }
+    h4 {
+      color: #95a5a6;
+      font-size: 1.8rem;
+    }
+    h5 {
+      color: #bdc3c7;
+      font-size: 1.5rem;
+    }
+
+    .time-section {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #7f8c8d;
+    }
+  </style>
+</Layout>
